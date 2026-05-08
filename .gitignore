@@ -7,6 +7,11 @@
 harness/build/
 harness/*.bin
 
+# compiled harness binaries (stay in artifact store)
+findings/*/harness/poc
+findings/*/harness/fuzz-harness
+findings/*/harness/test-*
+
 # real binaries live in the artifact store (~/.erosolar/artifacts/),
 # not in the repo. only sources, intel, and write-ups are tracked here.
 findings/*/binaries/
