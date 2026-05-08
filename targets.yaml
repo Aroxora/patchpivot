@@ -1,0 +1,60 @@
+# Watched targets. Each entry is a high-value product whose patches
+# we want to monitor for variant analysis. Add or remove freely.
+#
+# Fields:
+#   name           short slug
+#   product        human label
+#   repo           upstream source URL (when OSS)
+#   advisory       advisory feed (RSS / mailing list / vendor portal URL)
+#   bounty         bounty program URL (for disclosure terminal)
+#   notes          why this is in the portfolio
+#
+# Picking criteria:
+#   - patch volume high enough to surface variants
+#   - bug classes amenable to variant analysis (memory corruption,
+#     parser bugs, type confusion — not pure logic flaws)
+#   - vendor responsiveness on disclosure
+#   - either OSS (so binary diffing is straightforward) or with
+#     reachable firmware/binary distribution (so closed-source
+#     variant analysis is at least possible)
+
+targets:
+  - name: linux-kernel
+    product: Linux kernel (mainline)
+    repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+    advisory: https://www.kernel.org/security.html
+    bounty: ""
+    notes: |
+      net/, fs/, drivers/{net,gpu,bluetooth} have repeated variant clusters.
+      Watch syzbot reports; many syzbot fixes have undiscovered variants in
+      adjacent subsystems.
+
+  - name: chromium
+    product: Chromium / V8
+    repo: https://chromium.googlesource.com/chromium/src
+    advisory: https://chromereleases.googleblog.com/
+    bounty: https://bughunters.google.com/about/rules/chrome-friends/5745167867576320/chrome-vulnerability-reward-program-rules
+    notes: |
+      V8 type-confusion patches are a classic variant-hunt target.
+      Project Zero variant work here is the canonical reference.
+
+  - name: openssl
+    product: OpenSSL
+    repo: https://github.com/openssl/openssl
+    advisory: https://www.openssl.org/news/secadv/
+    bounty: ""
+    notes: ASN.1, X.509 parsers; cluster bugs.
+
+  - name: webkit
+    product: WebKit / JSC
+    repo: https://github.com/WebKit/WebKit
+    advisory: https://webkit.org/security-advisories/
+    bounty: https://security.apple.com/bounty/
+    notes: JIT type-confusion territory; pairs well with V8 hunts.
+
+  - name: glibc
+    product: GNU C library
+    repo: https://sourceware.org/git/glibc.git
+    advisory: https://sourceware.org/glibc/wiki/Security
+    bounty: ""
+    notes: small surface, slow patch cadence — but every variant pays dividends downstream.

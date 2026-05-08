@@ -1,0 +1,30 @@
+# build outputs
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+harness/build/
+harness/*.bin
+
+# real binaries live in the artifact store (~/.erosolar/artifacts/),
+# not in the repo. only sources, intel, and write-ups are tracked here.
+findings/*/binaries/
+findings/*/crashes/raw/
+
+# fuzzer state (only the canonical inputs are kept; the whole findings/
+# tree from afl-fuzz lives outside the repo)
+afl-findings/
+default/
+
+# editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# secrets — never check in tokens for HackerOne, vendor portals, etc.
+.env
+.env.*
+secrets.json
+**/credentials.json
