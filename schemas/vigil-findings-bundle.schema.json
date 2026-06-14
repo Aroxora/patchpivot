@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://patchpivot.local/schemas/vigil-findings-bundle.schema.json",
+  "title": "PatchPivot Vigil Findings Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "generatedAt",
+    "sourceRepo",
+    "sourcePath",
+    "totalFindings",
+    "byStatus",
+    "bySeverity",
+    "disclosures",
+    "findings"
+  ],
+  "properties": {
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sourceRepo": {
+      "type": "string"
+    },
+    "sourcePath": {
+      "type": "string"
+    },
+    "publicVigilUrl": {
+      "type": "string",
+      "format": "uri"
+    },
+    "totalFindings": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "byStatus": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "bySeverity": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "disclosures": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "disclosureFiles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "targets": {
+      "type": "string"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "title",
+        "cveId",
+        "severity",
+        "status",
+        "description",
+        "bugClass",
+        "affected",
+        "vendorAdvisory",
+        "patchCommit",
+        "hypothesis",
+        "variants",
+        "variantCount",
+        "disclosure",
+        "files"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "cveId": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "high",
+            "moderate",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "cvss": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "bugClass": {
+          "type": "string"
+        },
+        "affected": {
+          "type": "string"
+        },
+        "vendorAdvisory": {
+          "type": "string"
+        },
+        "patchCommit": {
+          "type": "string"
+        },
+        "hypothesis": {
+          "type": "string"
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "variantCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "disclosure": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "channel": {
+              "type": "string"
+            },
+            "submitted": {
+              "type": "string"
+            },
+            "acknowledged": {
+              "type": "string"
+            },
+            "fixed": {
+              "type": "string"
+            },
+            "public": {
+              "type": "string"
+            }
+          }
+        },
+        "files": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "root",
+            "readme"
+          ],
+          "properties": {
+            "root": {
+              "type": "string"
+            },
+            "readme": {
+              "type": "string"
+            },
+            "disclosure": {
+              "type": "string"
+            },
+            "intelFiles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "harnessFiles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "diffFiles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "crashFiles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "triageFiles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "readmeFull": {
+          "type": "string"
+        },
+        "disclosureFull": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

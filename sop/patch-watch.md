@@ -43,6 +43,41 @@ SHOULD remain operator-supervised for now — autonomous publication
 of advisories without human review crosses a line we're not ready
 for.
 
+## Headless MCP lab gate
+
+PatchPivot includes a headless-only MCP server for Windows-hosted lab
+control:
+
+```sh
+npm run mcp:security
+```
+
+Before using any lab execution tool:
+
+1. Run the self-test:
+
+   ```sh
+   npm run mcp:self-test
+   ```
+
+2. Confirm Kali exists as the configured WSL distro (default:
+   `kali-linux`) through `security.probe`.
+3. Confirm Ghidra headless resolves to
+   `C:\ghidra_12.1_PUBLIC\support\analyzeHeadless.bat` or the local
+   configured equivalent.
+4. Use `windows.probe`, `windows.defender_status`, and
+   `windows.firewall_profiles` for native host posture before running lab
+   commands.
+5. Add `findings/<slug>/intel/scope.md`.
+6. Change `MCP-LAB-AUTHORIZED: no` to `MCP-LAB-AUTHORIZED: yes` only
+   after target, artifact, and lab boundaries are approved.
+
+GUI tools are never part of this workflow. The MCP server blocks common
+GUI launchers, strips GUI environment variables, and uses Ghidra only
+through `analyzeHeadless`. Native Windows PowerShell runs are
+non-interactive and scope-gated. Network mode defaults to `off`; broader
+network modes require local policy changes and explicit scope notes.
+
 ## Filtering candidates
 
 Every queued finding starts at `Status: recon`. Before driving

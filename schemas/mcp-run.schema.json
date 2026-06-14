@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://patchpivot.local/schemas/mcp-run.schema.json",
+  "title": "PatchPivot MCP Run",
+  "type": "object",
+  "required": ["runId", "finding", "startedAt", "timeoutSeconds"],
+  "properties": {
+    "runId": {
+      "type": "string"
+    },
+    "finding": {
+      "type": "string"
+    },
+    "backend": {
+      "type": "string"
+    },
+    "distribution": {
+      "type": "string"
+    },
+    "command": {
+      "type": "string"
+    },
+    "network": {
+      "type": "string",
+      "enum": ["off", "public-source", "lab-only"]
+    },
+    "cwd": {
+      "type": "string"
+    },
+    "linuxCwd": {
+      "type": "string"
+    },
+    "binaryPath": {
+      "type": "string"
+    },
+    "binarySha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "analyzeHeadless": {
+      "type": "string"
+    },
+    "projectRoot": {
+      "type": "string"
+    },
+    "projectName": {
+      "type": "string"
+    },
+    "outputDir": {
+      "type": "string"
+    },
+    "timeoutSeconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finishedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "exitCode": {
+      "type": ["integer", "null"]
+    },
+    "signal": {
+      "type": ["string", "null"]
+    },
+    "timedOut": {
+      "type": "boolean"
+    },
+    "stdoutPath": {
+      "type": "string"
+    },
+    "stderrPath": {
+      "type": "string"
+    },
+    "stdoutPreview": {
+      "type": "string"
+    },
+    "stderrPreview": {
+      "type": "string"
+    },
+    "policy": {
+      "type": "object"
+    },
+    "exports": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "headlessOnly": {
+      "type": "boolean",
+      "const": true
+    }
+  },
+  "additionalProperties": true
+}

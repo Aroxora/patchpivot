@@ -17,6 +17,13 @@ findings/*/harness/test-*
 findings/*/binaries/
 findings/*/crashes/raw/
 
+# local MCP/lab configuration and generated operational artifacts
+config/security-mcp.local.json
+.vigil/mcp.json
+.cache/
+artifacts/
+findings/*/triage/runs/
+
 # fuzzer state (only the canonical inputs are kept; the whole findings/
 # tree from afl-fuzz lives outside the repo)
 afl-findings/

@@ -1,0 +1,20 @@
+{
+  "name": "patchpivot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Defensive variant-analysis workspace with a headless security-lab MCP server.",
+  "scripts": {
+    "patch-watch": "node scripts/patch-watch.mjs",
+    "mcp:security": "node scripts/mcp/patchpivot-security-mcp.mjs",
+    "mcp:self-test": "node scripts/mcp/self-test.mjs",
+    "vigil:probe": "node scripts/vigil/patchpivot-vigil.mjs --probe",
+    "vigil:export": "node scripts/vigil/patchpivot-vigil.mjs --export",
+    "vigil:config": "node scripts/vigil/patchpivot-vigil.mjs --config",
+    "vigil:install": "node scripts/vigil/patchpivot-vigil.mjs --install-project-mcp",
+    "vigil:smoke": "node scripts/vigil/patchpivot-vigil.mjs --smoke"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
