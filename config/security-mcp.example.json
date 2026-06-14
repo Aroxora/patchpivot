@@ -1,0 +1,59 @@
+{
+  "workspaceRoot": "C:\\GitHub\\patchpivot",
+  "artifactRoot": "C:\\PatchPivotArtifacts",
+  "headlessOnly": true,
+  "requireScopeFile": true,
+  "scopeAuthorizedMarker": "MCP-LAB-AUTHORIZED: yes",
+  "kali": {
+    "backend": "wsl",
+    "distribution": "kali-linux",
+    "user": "",
+    "defaultTimeoutSeconds": 900,
+    "maxTimeoutSeconds": 7200,
+    "allowNetworkModes": ["off"],
+    "defaultNetworkMode": "off"
+  },
+  "windows": {
+    "powershell": "powershell.exe",
+    "defaultTimeoutSeconds": 300,
+    "maxTimeoutSeconds": 3600,
+    "allowNetworkModes": ["off"],
+    "defaultNetworkMode": "off",
+    "allowDefenderScan": true,
+    "allowEventLogQuery": true
+  },
+  "ghidra": {
+    "analyzeHeadless": "C:\\ghidra_12.1_PUBLIC\\support\\analyzeHeadless.bat",
+    "projectRoot": "C:\\PatchPivotArtifacts\\ghidra\\projects",
+    "scriptPath": "scripts\\ghidra",
+    "defaultTimeoutSeconds": 3600,
+    "maxTimeoutSeconds": 14400
+  },
+  "policy": {
+    "maxCommandLength": 4000,
+    "blockedCommandPatterns": [
+      "\\b(startx|xinit|xfce4-session|gnome-session|kdeinit|plasmashell|mate-session|openbox|i3|xterm|alacritty|kitty|gnome-terminal|konsole|xfce4-terminal)\\b",
+      "\\b(firefox|chromium|google-chrome|brave-browser|burpsuite|wireshark|ghidraRun|ghidra)\\b",
+      "\\b(xdg-open|gio\\s+open|explorer\\.exe|Start-Process)\\b",
+      "\\b(Invoke-WebRequest|Invoke-RestMethod|iwr|irm|Start-BitsTransfer|bitsadmin|certutil\\s+-urlcache)\\b",
+      "\\b(msfconsole|msfvenom|metasploit|exploitdb|searchsploit)\\b",
+      "\\b(nmap|masscan|zmap|hping3|nping|nikto|sqlmap|hydra|medusa|patator|crackmapexec|netcat|nc|ncat|socat)\\b",
+      "\\b(mimikatz|secretsdump|samdump2|lsassy|evil-winrm|psexec|wmiexec|dcsync)\\b",
+      "\\b(Set-MpPreference|Add-MpPreference|Remove-MpPreference)\\b",
+      "\\b(Disable-WindowsOptionalFeature|Enable-PSRemoting|winrm|diskpart|format-volume|bcdedit)\\b",
+      "\\b(New-LocalUser|net\\s+user|net\\s+localgroup|schtasks|New-Service|sc\\.exe\\s+create)\\b",
+      "rm\\s+-rf\\s+/",
+      "Remove-Item\\s+.*(-Recurse|/s).*(:\\\\|\\$env:SystemRoot|C:\\\\Windows|C:\\\\Users)",
+      "\\bmkfs\\b",
+      "\\bdd\\b.*\\bof=",
+      ":\\s*\\(\\s*\\)\\s*\\{\\s*:"
+    ],
+    "networkIndicators": [
+      "https?://",
+      "ftp://",
+      "ssh://",
+      "\\b\\d{1,3}(?:\\.\\d{1,3}){3}\\b",
+      "\\b(curl|wget|aria2c|ssh|scp|sftp|rsync|git\\s+clone|Invoke-WebRequest|Invoke-RestMethod|iwr|irm|Start-BitsTransfer)\\b"
+    ]
+  }
+}

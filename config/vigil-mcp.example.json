@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "patchpivot-security": {
+      "command": "node",
+      "args": [
+        "C:\\GitHub\\patchpivot\\scripts\\mcp\\patchpivot-security-mcp.mjs"
+      ],
+      "cwd": "C:\\GitHub\\patchpivot",
+      "env": {
+        "PATCHPIVOT_MCP_CONFIG": "C:\\GitHub\\patchpivot\\config\\security-mcp.local.json",
+        "PATCHPIVOT_VIGIL_ROOT": "C:\\GitHub\\vigil-by-trenchwork"
+      },
+      "profiles": [
+        "vigil-code",
+        "vigil-cnd"
+      ]
+    }
+  }
+}

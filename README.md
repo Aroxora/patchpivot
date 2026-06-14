@@ -52,9 +52,35 @@ scripts/new-investigation.sh
   Manual investigation bootstrapper. It copies findings/_template to a new
   finding directory named by CVE, commit, or short slug.
 
+scripts/mcp/patchpivot-security-mcp.mjs
+  Dependency-free MCP stdio server for headless-only defensive lab automation.
+  It exposes policy checks, finding helpers, scoped Kali WSL execution,
+  headless Ghidra analysis, and artifact manifests.
+
+scripts/vigil/patchpivot-vigil.mjs
+  PatchPivot-to-Vigil bridge. It probes the local Vigil source checkout, exports
+  a Vigil-shaped findings bundle, and writes project-local .vigil/mcp.json.
+
+scripts/ghidra/ExportPatchPivotSummary.java
+  Ghidra analyzeHeadless post-script that exports program metadata, functions,
+  symbols, and strings into a finding's diff/ghidra directory.
+
 sop/patch-watch.md
   Operational procedure for running the watcher, filtering candidates, and
   enforcing disclosure-terminal requirements.
+
+config/security-mcp.example.json
+  Example local policy and path configuration for the MCP server.
+
+config/vigil-mcp.example.json
+  Example Vigil project MCP config that mounts PatchPivot's guarded MCP server.
+
+docs/
+  Headless MCP setup notes, Vigil integration, native Windows coverage, and the
+  security use-case matrix.
+
+schemas/
+  JSON Schemas for MCP run logs, artifact manifests, and Vigil findings bundles.
 
 state/watch-state.json
   Per-target watcher state. The first run for a target seeds lastSha. Later runs
@@ -125,9 +151,10 @@ Recommended research tooling:
 - Vendor-specific SDKs, symbols, debug packages, firmware images, or source
   mirrors when authorized
 
-This repository does not currently ship an MCP server, Kali image, Ghidra plugin,
-or proprietary Vigilant Ink Security CLI source. It defines a filesystem contract
-that those tools can drive.
+This repository ships a headless-only MCP server for Windows-hosted lab control.
+It does not ship a Kali image or proprietary Vigilant Ink Security CLI source.
+The MCP server is an integration layer over local WSL Kali and local headless
+Ghidra.
 
 ## Quick Start
 
@@ -179,6 +206,106 @@ node scripts/patch-watch.mjs --since=4w
 
 The first run for each target seeds `state/watch-state.json` and queues nothing.
 The second and later runs queue candidate investigations.
+
+## Built-In Headless MCP Server
+
+PatchPivot includes a dependency-free MCP stdio server:
+
+```sh
+npm run mcp:security
+```
+
+Validate the server without running Kali or Ghidra:
+
+```sh
+npm run mcp:self-test
+```
+
+The server exposes:
+
+- `security.probe`: inspect Windows, WSL, Kali, Ghidra, workspace, and policy
+- `vigil.probe`: inspect Vigil source/config/build integration state
+- `vigil.findings_bundle`: export findings in Vigil's normalized bundle shape
+- `vigil.project_mcp_config`: render the recommended project `.vigil/mcp.json`
+- `policy.explain`: return the active headless-only guardrails
+- `policy.check_command`: evaluate a proposed Kali or Windows command without execution
+- `windows.probe`: inspect native Windows security/tooling surface
+- `windows.run`: run scoped, policy-filtered, non-interactive PowerShell
+- `windows.defender_status`: read Microsoft Defender posture
+- `windows.defender_scan`: run bounded Defender custom scans
+- `windows.eventlog_query`: query local Windows event logs
+- `windows.firewall_profiles`: read Windows Firewall profile posture
+- `windows.optional_features`: probe Hyper-V, Sandbox, WSL, and related features
+- `finding.list`: list finding slugs and statuses
+- `finding.update_status`: update a finding status token
+- `kali.run`: run a scoped command in the configured Kali WSL distro
+- `ghidra.probe`: verify `analyzeHeadless` configuration
+- `ghidra.analyze`: run Ghidra headlessly and export summary files
+- `artifact.manifest`: hash files or directories into JSON manifests
+
+Hard defaults:
+
+- GUI tooling is blocked
+- Ghidra is invoked only through `analyzeHeadless`
+- `kali.run` and `windows.run` default to `network=off`
+- lab execution requires `intel/scope.md` with `MCP-LAB-AUTHORIZED: yes`
+- generated run logs stay under ignored `findings/<slug>/triage/runs/`
+
+Local setup details are in `docs/headless-security-mcp.md`. Vigil by Trenchwork
+integration is detailed in `docs/vigil-integration.md`. Native Windows coverage
+is detailed in `docs/windows-native-security.md`. Broader defensive expansion
+patterns are in `docs/security-use-cases.md`.
+
+## Vigil by Trenchwork Integration
+
+PatchPivot works with [Vigil by Trenchwork](https://trenchwork.org/vigil) in two
+ways:
+
+1. Vigil mounts PatchPivot as a project-local MCP server and calls the guarded
+   PatchPivot tools during an operator session.
+2. Vigil's existing security-analysis pipeline ingests PatchPivot findings from
+   the sibling source checkout.
+
+Current local source layout:
+
+```text
+C:\GitHub\patchpivot
+C:\GitHub\vigil-by-trenchwork
+```
+
+Install the project-local Vigil MCP config:
+
+```powershell
+cd C:\GitHub\patchpivot
+npm run vigil:install
+```
+
+Then build Vigil if `dist/` is missing and launch it from the PatchPivot working
+directory:
+
+```powershell
+cd C:\GitHub\vigil-by-trenchwork
+npm install
+npm run build
+
+cd C:\GitHub\patchpivot
+node C:\GitHub\vigil-by-trenchwork\dist\bin\vigil.js --profile vigil-code
+```
+
+Inside Vigil, PatchPivot tools appear with the `mcp__patchpivot_security__`
+prefix, for example `mcp__patchpivot_security__vigil_probe`,
+`mcp__patchpivot_security__kali_run`, and
+`mcp__patchpivot_security__ghidra_analyze`.
+
+Verify the integration:
+
+```powershell
+npm run vigil:probe
+npm run vigil:smoke
+```
+
+The generated `.vigil/mcp.json` is ignored by Git and must not contain sudo
+passwords, API keys, portal credentials, or other secrets.
 
 ## Proprietary CLI Integration Contract
 
@@ -1050,8 +1177,8 @@ High-value improvements:
   validation
 - add a cross-platform `new-investigation` script for Windows-native shells
 - add SARIF import/export for source-analysis tools
-- add MCP adapters for Kali lab execution and Ghidra headless exports
-- add artifact manifest generation with SHA-256 hashing
+- add SSH, Docker, and cloud-worker backends for the MCP server
+- extend artifact manifests with signing and external artifact-store sync
 - add CI that validates README, target config, finding structure, and disclosure
   tables
 - add a dashboard over finding status and disclosure state
